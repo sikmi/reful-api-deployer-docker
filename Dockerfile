@@ -1,9 +1,9 @@
-FROM node:6.10
+FROM node:6.11
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
+    apt-get install -y apt-transport-https --no-install-recommends && \
     curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
     echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
     apt-get update && \
