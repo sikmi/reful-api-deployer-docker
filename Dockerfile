@@ -1,20 +1,29 @@
-FROM node:6.11
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+FROM sikmi/awseb-deployer-docker
 
-RUN apt-get update && \
-    apt-get install -y apt-transport-https --no-install-recommends && \
-    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
-    apt-get update && \
-    apt-get install -y python-dev yarn \
-                    --no-install-recommends && \
-    rm -rf /var/lib/apt/lists/*
+# ruby install
+RUN curl -O http://ftp.ruby-lang.org/pub/ruby/2.5/ruby-2.5.1.tar.gz && \
+    tar -zxvf ruby-2.5.1.tar.gz && \
+    cd ruby-2.5.1 && \
+    ./configure --disable-install-doc && \
+    make && \
+    make install && \
+    cd .. && \
+    rm -r ruby-2.5.1 ruby-2.5.1.tar.gz
 
-# AWS CLI
-RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "get-pip.py" && \
-    python get-pip.py && \
-    pip install awscli
+# node install
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 
-# firebase-tool
-RUN npm install -g firebase-tools
+# yarn install
+RUN mkdir -p /var/lib/apt/lists \
+    && apt-get update \
+    && apt-get install -y apt-transport-https --no-install-recommends \
+    && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
+    && apt-get update && apt-get -y install yarn \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    && apt-get clean \
+    && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
+
+RUN gem install bundler
