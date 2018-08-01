@@ -27,3 +27,6 @@ RUN mkdir -p /var/lib/apt/lists \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 RUN gem install bundler
+
+# firebase install
+RUN npm install -g firebase-tools
