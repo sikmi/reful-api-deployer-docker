@@ -17,7 +17,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get -y install nodejs
 # yarn install
 RUN mkdir -p /var/lib/apt/lists \
     && apt-get update \
-    && apt-get install -y apt-transport-https --no-install-recommends \
+    && apt-get install -y apt-transport-https git --no-install-recommends \
     && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update && apt-get -y install yarn \
@@ -27,6 +27,5 @@ RUN mkdir -p /var/lib/apt/lists \
     && rm -rf /var/cache/apt/archives/* /var/lib/apt/lists/*
 
 RUN gem install bundler
-
 # firebase install
 RUN npm install -g firebase-tools
